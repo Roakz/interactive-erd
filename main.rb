@@ -7,5 +7,3 @@ mapper.load_file(File.open('test.sql'))
 top_level = mapper.calculate_top_level
 
 entities = mapper.split_entities
-
-p top_level

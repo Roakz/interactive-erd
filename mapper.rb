@@ -54,7 +54,6 @@ class Mapper
       skip = line.include? ");"
       skip ? entities << entity : next
     end
-    p entities
     entities
   end
 end
