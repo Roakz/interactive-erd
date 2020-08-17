@@ -1,6 +1,6 @@
 class Mapper
   attr_accessor :file, :load_file
-  attr_reader :calculate_top_level, :split_entities
+  attr_reader :calculate_top_level, :split_entities, :entities_to_json
 
   def initialize(params = {})
     @file = params[:file] ? params[:file] : nil
@@ -55,5 +55,36 @@ class Mapper
       skip ? entities << entity : next
     end
     entities
+  end
+
+  def entities_to_json(entities)
+    return_json = {}
+    return_json["entities"] = []
+    entities.each do |entity|
+      return_json["entities"] << {
+        "table_name": entity.split(" ")[2],
+        "columns": resolve_columns(entity)
+      }
+    end
+    p return_json
+  end
+
+  def resolve_columns(entity)
+    column_array = []
+
+    column = {}
+
+    count = 0
+    entity.each_line do |line|
+      next unless count != 0 || entity.split(" ")[0] == "FOREIGN"
+      column["name"] = line.split(" ")[0]
+      # continue here...
+      column["type"] = false
+      column["primary_key?"] = false
+      column["foreign_key?"] = false
+      column_array << column
+    end
+
+    return column_array
   end
 end
