@@ -32,5 +32,10 @@ end
     it "contains the correct amount of entities" do
       expect(@result.length).to eq(9)
     end
+
+    it "returns entities correctly as expected" do 
+      expect(@result[0]).to eq("CREATE TABLE production.categories (\r\n\tcategory_id INT IDENTITY (1, 1) PRIMARY KEY,\r\n\tcategory_name VARCHAR (255) NOT NULL\r\n);\r\n")
+      expect(@result[8]).to eq("CREATE TABLE production.stocks (\r\n\tstore_id INT,\r\n\tproduct_id INT,\r\n\tquantity INT,\r\n\tPRIMARY KEY (store_id, product_id),\r\n\tFOREIGN KEY (store_id) REFERENCES sales.stores (store_id) ON DELETE CASCADE ON UPDATE CASCADE,\r\n\tFOREIGN KEY (product_id) REFERENCES production.products (product_id) ON DELETE CASCADE ON UPDATE CASCADE\r\n);")
+    end
   end
 end
