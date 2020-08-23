@@ -45,7 +45,7 @@ class Mapper
     entity = ""
     skip = true
     File.foreach(@file) do |line|
-      if line.include? "TABLE" and line.include? "CREATE"
+      if line.include? "CREATE TABLE"
        entity = line
        skip = false
       end
@@ -71,18 +71,24 @@ class Mapper
 
   def resolve_columns(entity)
     column_array = []
-
-    column = {}
-
     count = 0
+
     entity.each_line do |line|
-      next unless count != 0 || entity.split(" ")[0] == "FOREIGN"
+
+      next if line.include? "CREATE TABLE"
+      next if line.include? ");"
+      next if line.include? "REFERENCES"
+
+      column = {}
+    
       column["name"] = line.split(" ")[0]
       # continue here...
-      column["type"] = false
-      column["primary_key?"] = false
-      column["foreign_key?"] = false
+      # column["type"] = false
+      # column["primary_key?"] = false
+      # column["foreign_key?"] = false
       column_array << column
+
+      count += 1
     end
 
     return column_array
