@@ -8,4 +8,6 @@ top_level = mapper.calculate_top_level
 
 entities = mapper.split_entities
 
-mapper.entities_to_json(entities)
+json = mapper.entities_to_json(entities)
+
+

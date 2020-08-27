@@ -19,14 +19,15 @@ class Mapper
     database_arr = []
 
     File.foreach(@file) do |line|
-      if line.include? "SCHEMA" 
-        schema_arr << line
+      if line.include? " CREATE SCHEMA" 
+        schema_arr << line.gsub(/\/\*.[^\*\/]*\*\//, '').tr("`", "")
       end
-      if line.include? "DATABASE"
-        database_arr << line 
+      if line.include? "CREATE DATABASE"
+        database_arr << line.gsub(/\/\*.[^\*\/]*\*\//, '').tr("`", "")
       end
       next
     end
+    
 
     schema_arr.each_with_index do |line, index|
       schema_arr[index] = line.split(' ').reject! {|word| unwanted_key_words.include? word }[0].tr(';', '')
@@ -35,7 +36,6 @@ class Mapper
     database_arr.each_with_index do |line, index|
       database_arr[index] = line.split(' ').reject! {|word| unwanted_key_words.include? word }[0].tr(';', '')
     end unless database_arr.empty?
-
     return {:database => database_arr, :schema => schema_arr}
   end
 
@@ -51,7 +51,7 @@ class Mapper
       end
       next unless !skip
       entity += line unless line == entity
-      skip = line.include? ");"
+      skip = line.include? ";"
       skip ? entities << entity : next
     end
     entities
@@ -59,6 +59,7 @@ class Mapper
 
   def entities_to_json(entities)
     return_json = {}
+    return_json["top_level"] = calculate_top_level
     return_json["entities"] = []
     entities.each do |entity|
       return_json["entities"] << {
@@ -66,7 +67,7 @@ class Mapper
         "columns": resolve_columns(entity)
       }
     end
-    p return_json
+    return_json
   end
 
   def resolve_columns(entity)
@@ -75,13 +76,18 @@ class Mapper
 
     entity.each_line do |line|
 
+      next if line.include? "DROP TABLE"
+      next if line.include? "USE"
       next if line.include? "CREATE TABLE"
-      next if line.include? ");"
+      next if line.include? ";"
       next if line.include? "REFERENCES"
+      next if line.split[0] == "PRIMARY"
+      next if line.split[0] == "FOREIGN"
+      next if line.split(" ")[0] == "--"
 
       column = {}
     
-      column["name"] = line.split(" ")[0]
+      column["column_name"] = line.split(" ")[0]
       # continue here...
       # column["type"] = false
       # column["primary_key?"] = false

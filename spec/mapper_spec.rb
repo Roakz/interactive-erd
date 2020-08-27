@@ -16,7 +16,7 @@ end
   
     it "returns the databases top level names" do
       @top_level_names = @mapper.calculate_top_level
-      expect(@top_level_names).to eq({:database => [], :schema => ["production", "sales"]})
+      expect(@top_level_names).to eq({:database => ["classicmodels"], :schema => []})
     end
   end
 
@@ -31,12 +31,7 @@ end
     end 
 
     it "should contain all entities" do
-      expect(@result.length).to eq(9)
-    end
-
-    it "should return the entities as expected" do 
-      expect(@result[0]).to eq("CREATE TABLE production.categories (\r\n\tcategory_id INT IDENTITY (1, 1) PRIMARY KEY,\r\n\tcategory_name VARCHAR (255) NOT NULL\r\n);\r\n")
-      expect(@result[8]).to eq("CREATE TABLE production.stocks (\r\n\tstore_id INT,\r\n\tproduct_id INT,\r\n\tquantity INT,\r\n\tPRIMARY KEY (store_id, product_id),\r\n\tFOREIGN KEY (store_id) REFERENCES sales.stores (store_id) ON DELETE CASCADE ON UPDATE CASCADE,\r\n\tFOREIGN KEY (product_id) REFERENCES production.products (product_id) ON DELETE CASCADE ON UPDATE CASCADE\r\n);")
+      expect(@result.length).to eq(8)
     end
   end
   
@@ -52,7 +47,7 @@ end
 
     it "should contain the top level objects" do
       expect(@result).to include("top_level")
-      expect(@result["top_level"]).to eq({:database => [], :schema => ["production", "sales"]})
+      expect(@result["top_level"]).to eq({:database => ["classicmodels"], :schema => []})
     end
 
     it "should contain all entities" do
@@ -60,15 +55,15 @@ end
       @returned_array = []
       @result["entities"].each {|obj| @returned_array << obj[:table_name]}
       expect(@returned_array).to contain_exactly(
-        "production.categories",
-        "production.brands",
-        "production.products",
-        "sales.customers",
-        "sales.stores",
-        "sales.staffs",
-        "sales.orders",
-        "sales.order_items",
-        "production.stocks"
+        "customers",
+        "employees",
+        "offices",
+        "orderdetails",
+        "orders",
+        "payments",
+        "productlines",
+        "products"
+        
       )
     end
 
