@@ -74,6 +74,9 @@ end
 
     it "should contain the correct key mappings" do
     end
+
+    it "should contain the correct data types for each column" do
+    end
     
   end
 end
