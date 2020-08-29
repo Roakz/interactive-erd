@@ -70,9 +70,9 @@ end
     it "should contain all columns" do
       @returned_array = []
       @result["entities"].each do |obj|
-        obj[:columns].each {|column| @returned_array << column["name"]}
+        obj[:columns].each {|column| @returned_array << column["column_name"]}
       end
-      expect(@returned_array).to contain_exactly(column_list)
+      expect(@returned_array).to eq(column_list)
     end
 
     it "should contain the correct key mappings" do

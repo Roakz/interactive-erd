@@ -63,7 +63,7 @@ class Mapper
     return_json["entities"] = []
     entities.each do |entity|
       return_json["entities"] << {
-        "table_name": entity.split(" ")[2],
+        "table_name": entity.split(" ")[2].tr('`', ''),
         "columns": resolve_columns(entity)
       }
     end
@@ -84,10 +84,11 @@ class Mapper
       next if line.split[0] == "PRIMARY"
       next if line.split[0] == "FOREIGN"
       next if line.split(" ")[0] == "--"
+      next if line.include? "KEY"
 
       column = {}
     
-      column["column_name"] = line.split(" ")[0]
+      column["column_name"] = line.split(" ")[0].tr('`', "")
       # continue here...
       # column["type"] = false
       # column["primary_key?"] = false
