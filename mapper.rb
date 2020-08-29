@@ -70,21 +70,24 @@ class Mapper
     return_json
   end
 
+  def resolve_columns_skip?(line)
+    ["DROP TABLE", "USE", "CREATE TABLE", ";", "REFERENCES", "KEY"].each do |skip_value|
+     if line.include? skip_value
+       return true
+     end
+    end
+    return true if ["PRIMARY", "FOREIGN", "--"].include? line.split[0]
+    return false
+  end
+
   def resolve_columns(entity)
     column_array = []
     count = 0
 
     entity.each_line do |line|
-
-      next if line.include? "DROP TABLE"
-      next if line.include? "USE"
-      next if line.include? "CREATE TABLE"
-      next if line.include? ";"
-      next if line.include? "REFERENCES"
-      next if line.split[0] == "PRIMARY"
-      next if line.split[0] == "FOREIGN"
-      next if line.split(" ")[0] == "--"
-      next if line.include? "KEY"
+      
+      next if resolve_columns_skip?(line)
+  
 
       column = {}
     

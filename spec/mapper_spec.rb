@@ -42,9 +42,6 @@ end
       @result = @mapper.entities_to_json(@entities)
     end
 
-    it "should be a valid json object" do
-    end
-
     it "should contain the top level objects" do
       expect(@result).to include("top_level")
       expect(@result["top_level"]).to eq({:database => ["classicmodels"], :schema => []})
