@@ -82,6 +82,9 @@ end
         expect(@returned_array).to eq(ordered_data_type_list)
       end
     end
+
+    it "should throw an error if invalid data types are given"  do
+    end
     
   end
 end
