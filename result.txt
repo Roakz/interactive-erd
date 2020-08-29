@@ -1,0 +1,20 @@
+........F.
+
+Failures:
+
+  1) Mapper entites to json function should contain all columns
+     Failure/Error: expect(@returned_array).to contain_exactly(column_list)
+
+       expected collection contained:  [["store_id", "product_id", "quantity", "order_id", "item_id", "product_id", "quantity", "list_price"...category_id", "model_year", "list_price", "brand_name", "brand_id", "category_id", "category_name"]]
+       actual collection contained:    ["PRIMARY", "PRIMARY", "active", "brand_id", "brand_id", "brand_name", "category_id", "category_id", ...e_id", "store_id", "store_id", "store_id", "store_name", "street", "street", "zip_code", "zip_code"]
+       the missing elements were:      [["store_id", "product_id", "quantity", "order_id", "item_id", "product_id", "quantity", "list_price"...category_id", "model_year", "list_price", "brand_name", "brand_id", "category_id", "category_name"]]
+       the extra elements were:        ["PRIMARY", "PRIMARY", "active", "brand_id", "brand_id", "brand_name", "category_id", "category_id", ...e_id", "store_id", "store_id", "store_id", "store_name", "street", "street", "zip_code", "zip_code"]
+     # ./spec/mapper_spec.rb:80:in `block (3 levels) in <top (required)>'
+
+Finished in 0.02112 seconds (files took 0.08002 seconds to load)
+10 examples, 1 failure
+
+Failed examples:
+
+rspec ./spec/mapper_spec.rb:75 # Mapper entites to json function should contain all columns
+
