@@ -57,6 +57,10 @@ class Mapper
     entities
   end
 
+  def resolve_entity_keys
+  return []
+  end
+
   def entities_to_json(entities)
     return_json = {}
     return_json["top_level"] = calculate_top_level
@@ -65,7 +69,8 @@ class Mapper
       entity_name = entity.split(" ")[2].tr('`', '')
       return_json["entities"] << {
         "table_name": entity_name,
-        "columns": resolve_columns(entity_name, entity)
+        "columns": resolve_columns(entity_name, entity),
+        "keys": resolve_entity_keys
       }
     end
     return_json

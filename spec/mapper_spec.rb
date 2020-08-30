@@ -1,6 +1,7 @@
 require_relative '../mapper'
 require_relative 'column_list'
 require_relative 'ordered_data_type_list'
+require_relative 'key_mapping_list'
 
 # This test file uses test.sql and loads it into the Mapper class to use a set of known data to test class output results.
 
@@ -73,6 +74,11 @@ end
     end
 
     it "should contain the correct key mappings" do
+      @returned_key_mappings = []
+      @result["entities"].each do |entity|
+       @returned_key_mappings << entity[:keys]
+      end
+      expect(@returned_key_mappings).to eq(key_mapping_list)
     end
 
     it "should contain the correct data types for each column" do
