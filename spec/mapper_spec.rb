@@ -77,10 +77,10 @@ end
 
     it "should contain the correct data types for each column" do
       @returned_array = []
-      @result["entities"].each do |obj|
-        obj[:columns].each {|column| @returned_array << column["data_type"]}
-        expect(@returned_array).to eq(ordered_data_type_list)
+      @result["entities"].each do |entity|
+        entity[:columns].each {|column| @returned_array << column["data_type"]}
       end
+      expect(@returned_array).to eq(ordered_data_type_list)
     end
 
     it "should throw an error if invalid data types are given"  do

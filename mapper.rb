@@ -80,6 +80,10 @@ class Mapper
     return false
   end
 
+  def line_for_data_type(line)
+    return line.split[1].gsub(/\([0-9]{1,3}\)?,?[0-9]{0,3}\)|,\z/, '')
+  end
+
   def resolve_columns(entity)
     column_array = []
     count = 0
@@ -88,12 +92,10 @@ class Mapper
       
       next if resolve_columns_skip?(line)
   
-
       column = {}
     
       column["column_name"] = line.split(" ")[0].tr('`', "")
-      # continue here...
-      # column["type"] = false
+      column["data_type"] = line_for_data_type(line)
       # column["primary_key?"] = false
       # column["foreign_key?"] = false
       column_array << column
