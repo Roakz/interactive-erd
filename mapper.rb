@@ -4,6 +4,7 @@ class Mapper
 
   def initialize(params = {})
     @file = params[:file] ? params[:file] : nil
+    @key_map_array = []
   end
 
   def load_file(file)
@@ -28,7 +29,6 @@ class Mapper
       next
     end
     
-
     schema_arr.each_with_index do |line, index|
       schema_arr[index] = line.split(' ').reject! {|word| unwanted_key_words.include? word }[0].tr(';', '')
     end unless schema_arr.empty?
@@ -62,9 +62,10 @@ class Mapper
     return_json["top_level"] = calculate_top_level
     return_json["entities"] = []
     entities.each do |entity|
+      entity_name = entity.split(" ")[2].tr('`', '')
       return_json["entities"] << {
-        "table_name": entity.split(" ")[2].tr('`', ''),
-        "columns": resolve_columns(entity)
+        "table_name": entity_name,
+        "columns": resolve_columns(entity_name, entity)
       }
     end
     return_json
@@ -84,25 +85,26 @@ class Mapper
     return line.split[1].gsub(/\([0-9]{1,3}\)?,?[0-9]{0,3}\)|,\z/, '')
   end
 
-  def resolve_columns(entity)
+  def store_key_mapping_lines(entity, line)
+    return unless line.include? "KEY"
+    @key_map_array << {:entity => entity, :line => line}
+  end
+
+  def resolve_columns(entity_name, entity)
     column_array = []
-    count = 0
 
     entity.each_line do |line|
-      
+
+      store_key_mapping_lines(entity_name, line)
+
       next if resolve_columns_skip?(line)
   
       column = {}
     
       column["column_name"] = line.split(" ")[0].tr('`', "")
       column["data_type"] = line_for_data_type(line)
-      # column["primary_key?"] = false
-      # column["foreign_key?"] = false
       column_array << column
-
-      count += 1
     end
-
     return column_array
   end
 end

@@ -10,6 +10,6 @@ entities = mapper.split_entities
 
 json = mapper.entities_to_json(entities)
 
-p json
+
 
 
