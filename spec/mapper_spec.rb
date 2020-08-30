@@ -1,7 +1,8 @@
 require_relative '../mapper'
 require_relative 'column_list'
+require_relative 'ordered_data_type_list'
 
-# This test file uses test.sql and loads it into the Mapper class to use a set of known data to test results.
+# This test file uses test.sql and loads it into the Mapper class to use a set of known data to test class output results.
 
 RSpec.describe Mapper do
 
@@ -59,8 +60,7 @@ end
         "orders",
         "payments",
         "productlines",
-        "products"
-        
+        "products" 
       )
     end
 
@@ -76,6 +76,14 @@ end
     end
 
     it "should contain the correct data types for each column" do
+      @returned_array = []
+      @result["entities"].each do |entity|
+        entity[:columns].each {|column| @returned_array << column["data_type"]}
+      end
+      expect(@returned_array).to eq(ordered_data_type_list)
+    end
+
+    it "should throw an error if invalid data types are given"  do
     end
     
   end
