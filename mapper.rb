@@ -57,8 +57,23 @@ class Mapper
     entities
   end
 
-  def resolve_entity_keys
-  return []
+  def resolve_entity_keys(entity)
+    @return_array = []
+    entity.each_line do |line|
+      next unless line.include? "KEY"
+      if line.split[0] == "PRIMARY"
+        @extracted_line = line[/\(\W*[a-zA-Z]*\W*(,\W*[a-zA-Z]*\W*)*\)|\)$/]
+        if @extracted_line
+          @extracted_line = @extracted_line.gsub(/[^\w,]/, '')
+          if @extracted_line.split(',').length == 1
+            @return_array << {:column_name => @extracted_line, :type => "primary"}
+          else
+            @extracted_line.split(',').each {|column| @return_array << {:column_name => column, :type => "primary"}}
+          end
+        end
+      end
+    end
+    @return_array
   end
 
   def entities_to_json(entities)
@@ -70,7 +85,7 @@ class Mapper
       return_json["entities"] << {
         "table_name": entity_name,
         "columns": resolve_columns(entity_name, entity),
-        "keys": resolve_entity_keys
+        "keys": resolve_entity_keys(entity)
       }
     end
     return_json
