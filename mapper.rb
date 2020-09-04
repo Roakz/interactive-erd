@@ -1,3 +1,12 @@
+require './lib/data_types.rb'
+require 'json'
+
+class InvalidDataType < StandardError
+  def message
+    "SQL file contains an invalid data type!"
+  end
+end
+
 class Mapper
   attr_accessor :file, :load_file
   attr_reader :calculate_top_level, :split_entities, :entities_to_json
@@ -72,8 +81,18 @@ class Mapper
           end
         end
       end
+      if line.include? 'FOREIGN'
+        segmented_line = line.split
+        segmented_line.reject! {|word| ["CONSTRAINT", "FOREIGN", "KEY", "REFERENCES"].include? word}.reject!.with_index {|v, i| i == 0}
+        @return_array << {
+          :column_name => segmented_line[0].gsub(/[^\w]/, ''),
+          :type => "foreign",
+          :ref_table => segmented_line[1].gsub(/[^\w]/, ''),
+          :ref_col => segmented_line[2].gsub(/[^\w]/, '')
+        }
+      end
     end
-    @return_array
+   @return_array
   end
 
   def entities_to_json(entities)
@@ -88,7 +107,7 @@ class Mapper
         "keys": resolve_entity_keys(entity)
       }
     end
-    return_json
+    return return_json
   end
 
   def resolve_columns_skip?(line)
@@ -101,8 +120,18 @@ class Mapper
     return false
   end
 
+  def validate_data_type!(data_type)
+    [data_type, data_type.upcase, data_type.capitalize].each {|variation| return true if data_types.include? variation} 
+    return false
+  end
+
   def line_for_data_type(line)
-    return line.split[1].gsub(/\([0-9]{1,3}\)?,?[0-9]{0,3}\)|,\z/, '')
+    @result = line.split[1].gsub(/\([0-9]{1,3}\)?,?[0-9]{0,3}\)|,\z/, '')
+    if validate_data_type!(@result) == false
+     raise InvalidDataType
+    else
+      return @result
+    end
   end
 
   def store_key_mapping_lines(entity, line)
