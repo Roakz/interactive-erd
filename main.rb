@@ -1,16 +1,23 @@
-require_relative 'mapper'
+require 'sinatra'
+require 'sinatra/custom_logger'
+require 'sinatra/reloader'
+require 'logger'
+require_relative 'mapper.rb'
 
-mapper = Mapper.new
+set :logger, Logger.new(STDOUT)
 
-mapper.load_file(File.open('test.sql'))
+post '/file-to-json' do
 
-top_level = mapper.calculate_top_level
+  mapper = Mapper.new 
+  mapper.load_file(params['file'][:tempfile])
+  top_level = mapper.calculate_top_level
+  entities = mapper.split_entities
+  mapper.entities_to_json(entities).to_json
+ 
+end
 
-entities = mapper.split_entities
 
-json = mapper.entities_to_json(entities).to_json
 
-p json
 
 
 
