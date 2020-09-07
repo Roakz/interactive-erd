@@ -12,3 +12,6 @@ gem "sinatra", "~> 2.0"
 gem "shotgun", "~> 0.9.2"
 
 gem "sinatra-contrib", "~> 2.0"
+
+
+gem "prawn", "~> 2.3"
