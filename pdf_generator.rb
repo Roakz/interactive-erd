@@ -1,15 +1,19 @@
 require 'prawn'
+require 'prawn/table'
 
 class PdfGenerator
 
   attr_accessor :generate, :pdf
 
-  def initialize
-    @pdf = Prawn::Document.new
+  def initialize(file)
+    @file = File.open(file)
   end
 
   def generate
-    @pdf.text "Testing from within class!"
+    @pdf = Prawn::Document.new
+    @pdf.table([["Header1", "Header2"],
+                  ["row1 col", "row1 col"],
+                  ["row2 col", "row2 col"]])
     return @pdf
   end
 
