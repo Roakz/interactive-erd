@@ -6,12 +6,33 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
+      <li id="home-link" class="nav-item active">
         <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
       </li>
-      <li class="nav-item">
+      <li id="generate-link" class="nav-item">
         <a class="nav-link" href="/file-to-json-form">Generate ERD </a>
       </li>
     </ul>
   </div>
 </nav>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+
+  let activeElement, otherElement
+  let elements = document.getElementsByClassName("nav-item")
+
+  if (window.location.pathname == "/file-to-json-form") {
+    activeElement = document.getElementById("generate-link")
+    otherElement = document.getElementById("home-link")
+  } else {
+    activeElement = document.getElementById("home-link")
+    otherElement = document.getElementById("generate-link")
+  }
+  
+  activeElement.className = "nav-item active"
+  otherElement.className = "nav-item"
+
+  console.log(activeElement)
+})
+</script>

@@ -22,8 +22,7 @@ get '/file-to-json-form' do
   erb :upload_form, :layout => :layout
 end
 
-post '/file-to-json' do
-  logger.info(params)
+post '/file-to-json' do 
   begin
     mapper = Mapper.new 
     mapper.load_file(params['file'][:tempfile])

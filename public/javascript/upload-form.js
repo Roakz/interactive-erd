@@ -6,22 +6,31 @@ $(".custom-file-input").on("change", function() {
   const upload = (file) => {
     let formData = new FormData()
     formData.append('file', file)
+    let status
 
-    fetch('http://localhost:4567/file-to-json', { // Your POST endpoint
+    fetch('http://localhost:4567/file-to-json', { 
       method: 'POST',
-      body: formData // This is your file object
+      body: formData 
     }).then(
-      response => response.json() // if the response is a JSON object
+      response => {
+          response.json() 
+          status = response.status
+      }
     ).then(
-      success => console.log(success) // Handle the success response object
+      success => {
+         if(status == 200) {
+            let flash = document.createElement("div")
+            flash.className = "alert alert-success text-center"
+            flash.innerHTML = "success! enjoy your interactive ERD!"
+            document.body.append(flash)
+         }
+      }
     ).catch(
-      error => console.log(error) // Handle the error response object
+      error => console.log(error)
     );
   };
   
-
   $("#upload-button").on("click", function() {
     let file = $(".custom-file-input").prop('files')
-    console.log(file[0])
     upload(file[0])
   })
