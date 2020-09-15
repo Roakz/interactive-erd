@@ -18,12 +18,13 @@ $(".custom-file-input").on("change", function() {
       }
     ).then(
       success => {
-         if(status == 200) {
-            let flash = document.createElement("div")
-            flash.className = "alert alert-success text-center"
-            flash.innerHTML = "success! enjoy your interactive ERD!"
-            document.body.append(flash)
-         }
+        window.location.href = "http://localhost:4567/pdf-test"
+        //  if(status == 200) {
+        //     let flash = document.createElement("div")
+        //     flash.className = "alert alert-success text-center"
+        //     flash.innerHTML = "success! enjoy your interactive ERD!"
+        //     document.body.append(flash)
+        //  }
       }
     ).catch(
       error => console.log(error)
