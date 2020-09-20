@@ -12,7 +12,6 @@ class PdfGenerator
     @hash = JSON.parse(@json)
   end
 
-
   def generate
     @pdf = Prawn::Document.new
     # take care of the top level stuff before we iterate.
@@ -22,7 +21,7 @@ class PdfGenerator
     @hash["entities"].each do |entity|
     generate_contents_line(@pdf, entity["table_name"])
     end
-    # @logger.error(@hash)
+
     @hash["entities"].each do |entity|
      generate_entity_tables(@pdf, entity["columns"], entity["table_name"])
     end
@@ -30,7 +29,7 @@ class PdfGenerator
   end
 
   def generate_contents_line(pdf, table_name)
-    pdf.text table_name
+    pdf.text "<link anchor=\"#{table_name}\">#{table_name}</link>", inline_format: true
     pdf.move_down 10
     pdf.stroke_horizontal_rule
     pdf.move_down 10
@@ -52,9 +51,9 @@ class PdfGenerator
        table << [column["column_name"], column["data_type"]]
      end
      pdf.start_new_page
+     pdf.add_dest "#{table_name}", pdf.dest_xyz(pdf.bounds.absolute_left, pdf.y)
      pdf.text(table_name)
      pdf.move_down 10
      pdf.table(table)
   end
-
 end
