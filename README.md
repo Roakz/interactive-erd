@@ -8,6 +8,6 @@ This repo contains a small web APP. It's Basically some ruby logic to extract th
 
 The ERD is interactive in the sense that it is paginated and you can click into the different entites to view them. You can then view the data types, keys and relationships of each entity and click through to there relations from within them.
 
-The UI is a basic bootsrap & ERB implementation.
+The UI is a basic bootstrap & ERB implementation.
 
 This is just a small prototype of an idea I had.
