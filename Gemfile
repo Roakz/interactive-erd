@@ -12,3 +12,10 @@ gem "sinatra", "~> 2.0"
 gem "shotgun", "~> 0.9.2"
 
 gem "sinatra-contrib", "~> 2.0"
+
+
+gem "prawn", "~> 2.3"
+
+gem "prawn-table", "~> 0.2.2"
+
+gem "rerun", "~> 0.13.0"
